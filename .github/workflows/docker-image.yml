@@ -12,6 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag finalgo:$(date +%s)
+       - uses: actions/checkout@v4
+         name: Checkout Repository
+
+       - name: Log in to Docker Hub
+         uses: docker/login-action@v2
+         with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+       - name: Build the Docker image
+         run: |
+          docker build -f Dockerfile -t finalgo:$(date +%s) .
+
+       - name: Push Docker image to Docker Hub
+         run: |
+          docker tag finalgo:$(date +%s) ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:latest
