@@ -27,5 +27,5 @@ jobs:
 
        - name: Push Docker image to Docker Hub
          run: |
-          docker tag finalgo:$(date +%s) ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:latest
+          docker tag finalgo:$(date +%s) ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:$(date +%s)
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:$(date +%s)
