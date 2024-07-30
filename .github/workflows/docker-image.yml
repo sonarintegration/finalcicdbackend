@@ -11,21 +11,27 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
-    steps:
-       - uses: actions/checkout@v4
-         name: Checkout Repository
+    env:
+      IMAGE_TAG: v1
 
-       - name: Log in to Docker Hub
-         uses: docker/login-action@v2
-         with:
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout Repository
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-       - name: Build the Docker image
-         run: |
-          docker build -f Dockerfile -t finalgo:$(date +%s) .
+      - name: Build the Docker image
+        run: |
+          docker build -f Dockerfile -t finalgo:${{ env.IMAGE_TAG }} .
 
-       - name: Push Docker image to Docker Hub
-         run: |
-          docker tag finalgo:$(date +%s) ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:$(date +%s)
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:$(date +%s)
+      - name: Tag Docker image
+        run: |
+          docker tag finalgo:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ env.IMAGE_TAG }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ env.IMAGE_TAG }}
