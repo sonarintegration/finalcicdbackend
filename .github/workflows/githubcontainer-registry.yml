@@ -1,5 +1,5 @@
 
-name: Docker Image Deployment
+name: GitHub Container Registry
 
 on:
   workflow_run:
