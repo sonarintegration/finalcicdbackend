@@ -43,7 +43,7 @@ jobs:
           category: my-analysis-tool
         
       - name: Print Snyk report
-        run: cat snyk.sarif      
+        run: cat snyk.sarif     
 
       # - name: Run Trivy vulnerability scanner in repo mode
       #   uses: aquasecurity/trivy-action@master
