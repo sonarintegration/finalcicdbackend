@@ -23,12 +23,12 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker build -f Dockerfile -t finalgo:${{ github.run_number }} .
+          docker build -f Dockerfile -t finalgo:V${{ github.run_number }} .
 
       - name: Tag Docker image
         run: |
-          docker tag finalgo:${{ github.run_number }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ github.run_number }}
+          docker tag finalgo:${{ github.run_number }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:V${{ github.run_number }}
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ github.run_number }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:V${{ github.run_number }}
