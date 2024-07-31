@@ -11,9 +11,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
-    env:
-      IMAGE_TAG: v2
-      
     steps:
       - uses: actions/checkout@v4
         name: Checkout Repository
@@ -26,14 +23,12 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker build -f Dockerfile -t finalgo:${{ env.IMAGE_TAG }} .
+          docker build -f Dockerfile -t finalgo:${{ github.run_number }} .
 
       - name: Tag Docker image
         run: |
-          docker tag finalgo:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ env.IMAGE_TAG }}
+          docker tag finalgo:${{ github.run_number }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ github.run_number }}
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ env.IMAGE_TAG }}
-
-
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:${{ github.run_number }}
