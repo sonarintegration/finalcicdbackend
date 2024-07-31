@@ -24,26 +24,26 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Run Snyk to check for vulnerabilities
-      #   uses: snyk/actions/golang@master
-      #   continue-on-error: true
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #   with:
-      #     command: code test
-      #     args: --sarif-file-output=snyk.sarif
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/golang@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
+          args: --sarif-file-output=snyk.sarif
 
-      # - name: List directory contents
-      #   run: ls -la
+      - name: List directory contents
+        run: ls -la
 
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: snyk.sarif
-      #     category: my-analysis-tool
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+          category: my-analysis-tool
         
-      # - name: Print Snyk report
-      #   run: cat snyk.sarif      
+      - name: Print Snyk report
+        run: cat snyk.sarif      
 
       # - name: Run Trivy vulnerability scanner in repo mode
       #   uses: aquasecurity/trivy-action@master
