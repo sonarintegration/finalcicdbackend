@@ -41,7 +41,6 @@ jobs:
         with:
           sarif_file: snyk.sarif
           category: my-analysis-tool
-          path: snyk.sarif
         
       - name: Print Snyk report
         run: cat snyk.sarif     
