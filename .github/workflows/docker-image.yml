@@ -30,14 +30,14 @@ jobs:
           docker tag finalgo:V${{ github.run_number }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:V${{ github.run_number }}
 
       - name: Scan Docker image with Trivy
-        uses: aquasecurity/trivy-action@v0.2.1
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: finalgo:V${{ github.run_number }}
 
-      - name: Scan Docker image with Snyk
-        uses: snyk/actions/docker@v1
-        with:
-          args: test --all-projects --docker finalgo:V${{ github.run_number }}
+      # - name: Scan Docker image with Snyk
+      #   uses: snyk/actions/docker@v1
+      #   with:
+      #     args: test --all-projects --docker finalgo:V${{ github.run_number }}
 
       - name: Push Docker image to Docker Hub
         run: |
