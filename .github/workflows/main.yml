@@ -47,29 +47,29 @@ jobs:
       # - name: Print Snyk report
       #   run: cat snyk.sarif     
 
-      # - name: Run Trivy vulnerability scanner in repo mode
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #      scan-type: 'fs'
-      #      ignore-unfixed: true
-      #      format: 'sarif'
-      #      output: 'trivy-results.sarif'
-      #      severity: 'CRITICAL'
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+           scan-type: 'fs'
+           ignore-unfixed: true
+           format: 'sarif'
+           output: 'trivy-results.sarif'
+           severity: 'CRITICAL'
 
-      # - name: Run Trivy in GitHub SBOM mode and submit results to Dependency Graph
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     scan-type: 'fs'
-      #     format: 'github'
-      #     output: 'dependency-results.sbom.json'
-      #     image-ref: '.'
-      #     github-pat: ${{ secrets.GH_TOKEN }}
+      - name: Run Trivy in GitHub SBOM mode and submit results to Dependency Graph
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'github'
+          output: 'dependency-results.sbom.json'
+          image-ref: '.'
+          github-pat: ${{ secrets.GH_TOKEN }}
  
-      # - name: Create coverage artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: trivy result
-      #     path: dependency-results.sbom.json
+      - name: Create coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: trivy result
+          path: dependency-results.sbom.json
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -135,44 +135,44 @@ jobs:
           name: coverage-html
           path: coverage.html
 
-      # - name: Static Code Analysis
-      #   uses: sonarsource/sonarqube-scan-action@v2
-      #   with:
-      #     projectBaseDir: .
-      #     args: >
-      #       -Dsonar.organization=sonarintegration-1
-      #       -Dsonar.projectKey=sonarintegration-1_go-todo-project
-      #       -Dsonar.sources=./
-      #       -Dsonar.go.coverage.reportPaths=coverage.out
-      #       -Dsonar.host.url=https://sonarcloud.io
-      #       -Dsonar.pullrequest.provider=GitHub
-      #       -Dsonar.pullrequest.github.repository=${{ github.repository }}
-      #       -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-      #       -Dsonar.pullrequest.branch=${{ github.head_ref }}
-      #       -Dsonar.pullrequest.base=${{ github.base_ref }}
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Static Code Analysis
+        uses: sonarsource/sonarqube-scan-action@v2
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.organization=sonarintegration-1
+            -Dsonar.projectKey=sonarintegration-1_go-todo-project
+            -Dsonar.sources=./
+            -Dsonar.go.coverage.reportPaths=coverage.out
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.pullrequest.provider=GitHub
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # - name: Quality check for SonarCloud
-      #   env:
-      #     SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #          curl -s https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }} -o result.json
-      #          cat result.json
-      #          if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
-      #             echo "Quality gate failed."
-      #             exit 1
-      #          else
-      #             echo "Quality gate passed."
-      #          fi
+      - name: Quality check for SonarCloud
+        env:
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+               curl -s https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }} -o result.json
+               cat result.json
+               if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
+                  echo "Quality gate failed."
+                  exit 1
+               else
+                  echo "Quality gate passed."
+               fi
 
-      #          failedConditions=$(jq -r '.projectStatus.conditions[] | select(.status == "ERROR") | "\(.metricKey): \(.actualValue) (threshold: \(.errorThreshold))"' result.json)
-      #          if [ -n "$failedConditions" ]; then
-      #            echo "Failed Conditions:"
-      #            echo "$failedConditions"
-      #          fi
+               failedConditions=$(jq -r '.projectStatus.conditions[] | select(.status == "ERROR") | "\(.metricKey): \(.actualValue) (threshold: \(.errorThreshold))"' result.json)
+               if [ -n "$failedConditions" ]; then
+                 echo "Failed Conditions:"
+                 echo "$failedConditions"
+               fi
 
       # - name: Send notification on Slack using Webhooks - Success
       #   if: ${{ always() }}
