@@ -29,15 +29,22 @@ jobs:
         run: |
           docker tag finalgo:V${{ github.run_number }} ${{ secrets.DOCKER_HUB_USERNAME }}/finalgo:V${{ github.run_number }}
 
-      - name: Scan Docker image with Trivy
-        uses: aquasecurity/trivy-action@0.20.0
+      - name: Run Trivy security scan on Docker image
+        uses: aquasecurity/trivy-action@master
         with:
-          image-ref: finalgo:V${{ github.run_number }}
+          scan-type: 'image'
+          image-ref: 'finalgo:V${{ github.run_number }}'
+          format: 'sarif'
+          output: 'trivy-image-results.sarif'
+          severity: 'CRITICAL'
 
-      # - name: Scan Docker image with Snyk
-      #   uses: snyk/actions/docker@v1
-      #   with:
-      #     args: test --all-projects --docker finalgo:V${{ github.run_number }}
+      - name: Upload Trivy image SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-image-results.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
       - name: Push Docker image to Docker Hub
         run: |
