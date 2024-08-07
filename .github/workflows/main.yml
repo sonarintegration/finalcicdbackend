@@ -141,7 +141,7 @@ jobs:
           projectBaseDir: .
           args: >
             -Dsonar.organization=sonarintegration-1
-            -Dsonar.projectKey=sonarintegration-1_go-todo-project
+            -Dsonar.projectKey=sonarintegration-1_finalcicdbackend
             -Dsonar.sources=./
             -Dsonar.go.coverage.reportPaths=coverage.out
             -Dsonar.host.url=https://sonarcloud.io
