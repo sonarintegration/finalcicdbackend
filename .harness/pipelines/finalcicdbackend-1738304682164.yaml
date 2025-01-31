@@ -33,6 +33,9 @@ pipeline:
                   identifier: gotestcoverage
                   name: go_test_coverage
                   spec:
+                    connectorRef: account.harnessImage
+                    image: golang:1.22.1-alpine
+                    shell: Sh
                     command: go test -coverprofile=coverage.out ./...
                   timeout: ""
                   type: Run
@@ -40,23 +43,26 @@ pipeline:
                   identifier: gotestreport
                   name: go_test_report
                   spec:
+                    connectorRef: account.harnessImage
+                    image: golang:1.22.1-alpine
+                    shell: Sh
                     command: "export GOBIN=/home/harness/go/bin\n\t\texport PATH=/home/harness/go/bin:$PATH\n\t\techo $PATH\n\t\tgo install github.com/jstemmer/go-junit-report/v2@latest\n\t\tgo test -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml"
                     reports:
+                      type: JUnit
                       spec:
                         paths:
                           - /harness/report.xml
-                      type: JUnit
                   timeout: ""
                   type: Run
               - step:
                   identifier: dockerbuild
                   name: docker_build
                   spec:
-                    caching: true
                     connectorRef: <+input>
                     repo: hello/world
                     tags:
                       - latest
+                    caching: true
                   timeout: ""
                   type: BuildAndPushDockerRegistry
           platform:
