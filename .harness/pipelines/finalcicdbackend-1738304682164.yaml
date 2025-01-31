@@ -24,7 +24,7 @@ pipeline:
                   name: go_build
                   spec:
                     connectorRef: account.harnessImage
-                    image: 1.22.1-alpine
+                    image: golang:1.22.1-alpine
                     shell: Sh
                     command: go build
                   timeout: ""
