@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_sonarintegration_finalcicdbackend_1738304685580-push-trigger-input-set
+  identifier: Build_sonarintegration_finalcicdbackend_1738304685580pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: _Tier_GO
+  pipeline:
+    identifier: Build_sonarintegration_finalcicdbackend_1738304685580
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
