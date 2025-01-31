@@ -23,6 +23,9 @@ pipeline:
                   identifier: gobuild
                   name: go_build
                   spec:
+                    connectorRef: account.harnessImage
+                    image: 1.22.1-alpine
+                    shell: Sh
                     command: go build
                   timeout: ""
                   type: Run
@@ -57,9 +60,9 @@ pipeline:
                   timeout: ""
                   type: BuildAndPushDockerRegistry
           platform:
-            arch: Amd64
             os: Linux
+            arch: Amd64
           runtime:
-            spec: {}
             type: Cloud
+            spec: {}
         type: CI
