@@ -55,16 +55,24 @@ pipeline:
                   timeout: ""
                   type: Run
               - step:
-                  identifier: dockerbuild
-                  name: docker_build
+                  type: Sonarqube
+                  name: Sonarqube_1
+                  identifier: Sonarqube_1
                   spec:
-                    connectorRef: <+input>
-                    repo: hello/world
-                    tags:
-                      - latest
-                    caching: true
-                  timeout: ""
-                  type: BuildAndPushDockerRegistry
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                    auth:
+                      access_token: 5ca7a9d7c023ff2d022e32d71f7b6cb1e97c8f1a
+                      domain: https://sonarcloud.io/
+                      ssl: false
+                    tool:
+                      project_key: sonarintegration-1_finalcicdbackend
           platform:
             os: Linux
             arch: Amd64
